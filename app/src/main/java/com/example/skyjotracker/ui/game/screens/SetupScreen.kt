@@ -6,7 +6,7 @@
  * Am unteren Ende des Screens ist dann ein weiterer Button um zum nächsten Screen zu gelangen.
  */
 
-package com.example.skyjotracker.ui.game.game
+package com.example.skyjotracker.ui.game.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,7 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skyjotracker.R
-import com.example.skyjotracker.ui.game.game.shared.Heading
+import com.example.skyjotracker.ui.game.screens.shared.Heading
 import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
 import kotlin.math.roundToInt
 

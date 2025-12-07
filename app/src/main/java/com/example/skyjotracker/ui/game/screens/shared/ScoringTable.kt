@@ -1,4 +1,4 @@
-package com.example.skyjotracker.ui.game.game.shared
+package com.example.skyjotracker.ui.game.screens.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

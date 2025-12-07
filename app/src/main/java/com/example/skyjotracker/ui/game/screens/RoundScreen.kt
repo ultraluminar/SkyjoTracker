@@ -3,7 +3,7 @@
  * Ein Liste mit den Namen der Spieler links und den aktuellen Spielständen daneben.
  */
 
-package com.example.skyjotracker.ui.game.game
+package com.example.skyjotracker.ui.game.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,10 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skyjotracker.R
-import com.example.skyjotracker.ui.game.game.shared.Heading
-import com.example.skyjotracker.ui.game.game.shared.Leaderboard
-import com.example.skyjotracker.ui.game.game.shared.RoundsProgressIndicator
-import com.example.skyjotracker.ui.game.game.shared.ScoringTable
+import com.example.skyjotracker.ui.game.screens.shared.Heading
+import com.example.skyjotracker.ui.game.screens.shared.Leaderboard
+import com.example.skyjotracker.ui.game.screens.shared.RoundsProgressIndicator
+import com.example.skyjotracker.ui.game.screens.shared.ScoringTable
 import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
 
 enum class ScoreVisualizer(

@@ -1,4 +1,4 @@
-package com.example.skyjotracker.ui.game.game
+package com.example.skyjotracker.ui.game.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,8 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skyjotracker.R
-import com.example.skyjotracker.ui.game.game.shared.Heading
-import com.example.skyjotracker.ui.game.game.shared.RoundsProgressIndicator
+import com.example.skyjotracker.ui.game.screens.shared.Heading
+import com.example.skyjotracker.ui.game.screens.shared.RoundsProgressIndicator
 import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
 
 @Composable
