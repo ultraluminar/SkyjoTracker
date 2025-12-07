@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.skyjotracker.R
+import com.example.skyjotracker.ui.AppViewModelProvider
 import com.example.skyjotracker.ui.game.screens.FinishScreen
 import com.example.skyjotracker.ui.game.screens.RoundScreen
 import com.example.skyjotracker.ui.game.screens.ScoringScreen
