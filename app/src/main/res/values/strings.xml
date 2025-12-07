@@ -1,0 +1,49 @@
+<resources>
+<!-- App-->
+    <string name="app_name">Skyjo Tracker</string>
+    <string name="app_destination_game">Game</string>
+    <string name="app_destination_history">History</string>
+    <string name="app_destination_statistics">Statistics</string>
+    <string name="app_info">App Info and Credits</string>
+    <string name="app_credits_title">App Credits</string>
+    <string name="app_credits_text">
+        Hey there!
+        \nI\'m the developer of this App.
+        \nI created it as my homework in
+        \n\'Graphic Programming for Mobile Devices\'.
+        \n\nHere is my information:
+        \nName: Adrian Lösch
+        \nGroup: MKDfu-22*
+    </string>
+
+<!-- Game Destination-->
+    <string name="game_setup">Setup</string>
+    <string name="game_setup_heading">New Game</string>
+    <string name="game_setup_players_description">Enter the player names for your new game</string>
+    <string name="game_setup_rounds_description">Enter a number of rounds or play indefinitely</string>
+    <string name="game_setup_player_input_label">Player %s</string>
+    <string name="game_setup_add_player">Add Player</string>
+    <string name="game_setup_number_of_rounds">%s Rounds</string>
+    <string name="game_setup_start_game">Start Game</string>
+
+    <string name="game_round">Round</string>
+    <string name="game_round_heading">%1$d. Round</string>
+    <string name="game_round_description">Overview of the current scores</string>
+    <string name="game_round_enter_scores">Enter Scores</string>
+
+    <string name="game_scoring">Scoring</string>
+    <string name="game_scoring_heading">%1$d. Round - Results</string>
+    <string name="game_scoring_description">Enter the players scores</string>
+    <string name="game_scoring_input_label">Score</string>
+    <string name="game_scoring_next_round">Next Round</string>
+
+    <string name="game_finish">Results</string>
+    <string name="game_finish_heading">Results</string>
+    <string name="game_finish_description">The final results of your game</string>
+    <string name="game_finish_new_game">New Game</string>
+
+<!-- General-->
+    <string name="back_button">Back Button</string>
+    <string name="confirm">Confirm</string>
+    <string name="game_finish_game">Finish Game</string>
+</resources>
