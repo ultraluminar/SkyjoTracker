@@ -33,10 +33,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.skyjotracker.R
-import com.example.skyjotracker.ui.game.game.FinishScreen
-import com.example.skyjotracker.ui.game.game.RoundScreen
-import com.example.skyjotracker.ui.game.game.ScoringScreen
-import com.example.skyjotracker.ui.game.game.SetupScreen
+import com.example.skyjotracker.ui.game.screens.FinishScreen
+import com.example.skyjotracker.ui.game.screens.RoundScreen
+import com.example.skyjotracker.ui.game.screens.ScoringScreen
+import com.example.skyjotracker.ui.game.screens.SetupScreen
 
 enum class GameScreen(
     @StringRes val title: Int,
