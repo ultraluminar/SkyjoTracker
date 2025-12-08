@@ -33,14 +33,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.skyjotracker.R
-import com.example.skyjotracker.ui.AppViewModelProvider
 import com.example.skyjotracker.ui.game.screens.FinishScreen
 import com.example.skyjotracker.ui.game.screens.RoundScreen
 import com.example.skyjotracker.ui.game.screens.ScoringScreen
 import com.example.skyjotracker.ui.game.screens.SetupScreen
 
 enum class GameScreen(
-    @StringRes val title: Int,
+        @StringRes val title: Int,
 ) {
     SETUP(title = R.string.game_setup),
     ROUND(title = R.string.game_round),
@@ -50,90 +49,82 @@ enum class GameScreen(
 
 @Composable
 fun GameDestination(
-    viewModel: GameViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+        viewModel: GameViewModel = viewModel(),
+        navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = GameScreen.valueOf(
-        backStackEntry?.destination?.route ?: GameScreen.SETUP.name
-    )
+    val currentScreen =
+            GameScreen.valueOf(backStackEntry?.destination?.route ?: GameScreen.SETUP.name)
     var showCreditDialog by remember { mutableStateOf(false) }
 
     if (showCreditDialog) {
         AppCreditsDialog(
-            onConfirm = { showCreditDialog = false },
-            onDismiss = { showCreditDialog = false }
+                onConfirm = { showCreditDialog = false },
+                onDismiss = { showCreditDialog = false }
         )
     }
 
     Scaffold(
-        topBar = {
-            GameScreenAppBar(
-                currentScreen = currentScreen,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() },
-                onCreditsClick = { showCreditDialog = true }
-            )
-        }
+            topBar = {
+                GameScreenAppBar(
+                        currentScreen = currentScreen,
+                        onCreditsClick = { showCreditDialog = true }
+                )
+            }
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
         NavHost(
-            navController = navController,
-            startDestination = GameScreen.SETUP.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+                navController = navController,
+                startDestination = GameScreen.SETUP.name,
+                modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
             composable(route = GameScreen.SETUP.name) {
                 SetupScreen(
-                    onStartButtonClick = { playerNames, numberOfRounds ->
-                        viewModel.setPlayerNames(playerNames)
-                        viewModel.setNumberOfRounds(numberOfRounds)
-                        navController.navigate(GameScreen.ROUND.name)
-                    }
+                        onStartButtonClick = { playerNames, numberOfRounds ->
+                            viewModel.setPlayerNames(playerNames)
+                            viewModel.setNumberOfRounds(numberOfRounds)
+                            navController.navigate(GameScreen.ROUND.name)
+                        }
                 )
             }
             composable(route = GameScreen.ROUND.name) {
                 RoundScreen(
-                    onFinishGame = {
-                        navController.navigate(GameScreen.FINISH.name)
-                    },
-                    onRoundComplete = {
-                        navController.navigate(GameScreen.SCORING.name)
-                    },
-                    playerNames = uiState.playerNames,
-                    currentRound = uiState.currentRound,
-                    numberOfRounds = uiState.numberOfRounds,
-                    scoreSheet = uiState.scoreSheet,
-                    totalScores = uiState.totalScores
+                        onFinishGame = { navController.navigate(GameScreen.FINISH.name) },
+                        onRoundComplete = { navController.navigate(GameScreen.SCORING.name) },
+                        playerNames = uiState.playerNames,
+                        currentRound = uiState.currentRound,
+                        numberOfRounds = uiState.numberOfRounds,
+                        scoreSheet = uiState.scoreSheet,
+                        totalScores = uiState.totalScores
                 )
             }
             composable(route = GameScreen.SCORING.name) {
                 val lastRound = uiState.currentRound == uiState.numberOfRounds
-                val route = if (lastRound) {
-                    GameScreen.FINISH.name
-                } else {
-                    GameScreen.ROUND.name
-                }
+                val route =
+                        if (lastRound) {
+                            GameScreen.FINISH.name
+                        } else {
+                            GameScreen.ROUND.name
+                        }
                 ScoringScreen(
-                    onScoringComplete = {
-                        viewModel.setPlayerScores(it)
-                        navController.navigate(route)
-                    },
-                    playerNames = uiState.playerNames,
-                    currentRound = uiState.currentRound,
-                    numberOfRounds = uiState.numberOfRounds
+                        onScoringComplete = {
+                            viewModel.setPlayerScores(it)
+                            navController.navigate(route)
+                        },
+                        playerNames = uiState.playerNames,
+                        currentRound = uiState.currentRound,
+                        numberOfRounds = uiState.numberOfRounds
                 )
             }
             composable(route = GameScreen.FINISH.name) {
                 FinishScreen(
-                    onNewGameButtonClick = {
-                        viewModel.reset()
-                        navController.popBackStack(GameScreen.SETUP.name, inclusive = false)
-                    },
-                    playerNames = uiState.playerNames,
-                    totalScores = uiState.totalScores
+                        onNewGameButtonClick = {
+                            viewModel.reset()
+                            navController.popBackStack(GameScreen.SETUP.name, inclusive = false)
+                        },
+                        playerNames = uiState.playerNames,
+                        totalScores = uiState.totalScores
                 )
             }
         }
@@ -143,63 +134,44 @@ fun GameDestination(
 @Composable
 fun AppCreditsDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(R.string.app_credits_title))
-        },
-        text = {
-            Text(text = stringResource(R.string.app_credits_text))
-        },
-        confirmButton = {
-            Button(onClick = onConfirm) {
-                Text(text = stringResource(R.string.confirm))
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.app_credits_title)) },
+            text = { Text(text = stringResource(R.string.app_credits_text)) },
+            confirmButton = {
+                Button(onClick = onConfirm) { Text(text = stringResource(R.string.confirm)) }
             }
-        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreenAppBar(
-    currentScreen: GameScreen,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    onCreditsClick: () -> Unit,
-    modifier: Modifier = Modifier
+        currentScreen: GameScreen,
+        onCreditsClick: () -> Unit,
+        modifier: Modifier = Modifier
 ) {
     TopAppBar(
-        title = {
-            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(
-                    text = stringResource(currentScreen.title),
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-        },
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_24dp),
-                        contentDescription = stringResource(R.string.back_button)
+            title = {
+                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(
+                            text = stringResource(currentScreen.title),
+                            fontWeight = FontWeight.SemiBold
                     )
                 }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        actions = {
-            IconButton(
-                onClick = onCreditsClick
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.info_24dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    contentDescription = stringResource(R.string.app_info)
-                )
-            }
-        },
-        modifier = modifier
+            },
+            colors =
+                    TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+            actions = {
+                IconButton(onClick = onCreditsClick) {
+                    Icon(
+                            painter = painterResource(R.drawable.info_24dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            contentDescription = stringResource(R.string.app_info)
+                    )
+                }
+            },
+            modifier = modifier
     )
 }
