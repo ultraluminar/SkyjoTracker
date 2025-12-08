@@ -38,7 +38,7 @@ import com.example.skyjotracker.ui.game.screens.shared.Heading
 import com.example.skyjotracker.ui.game.screens.shared.Leaderboard
 import com.example.skyjotracker.ui.game.screens.shared.RoundsProgressIndicator
 import com.example.skyjotracker.ui.game.screens.shared.ScoringTable
-import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
+import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 enum class ScoreVisualizer(
     val label: String

@@ -49,7 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skyjotracker.R
 import com.example.skyjotracker.ui.game.screens.shared.Heading
-import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
+import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 import kotlin.math.roundToInt
 
 @Composable

@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
+import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 private val cellWidth: Dp = 72.dp
 private val cellHeight: Dp = 48.dp

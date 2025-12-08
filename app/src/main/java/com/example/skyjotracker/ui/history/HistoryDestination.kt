@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.skyjotracker.R
 import com.example.skyjotracker.data.database.GameEntity
-import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
+import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -1,4 +1,4 @@
-package com.example.skyjotracker.ui.game.theme
+package com.example.skyjotracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.skyjotracker.R
 import com.example.skyjotracker.ui.game.screens.shared.Heading
 import com.example.skyjotracker.ui.game.screens.shared.Leaderboard
-import com.example.skyjotracker.ui.game.theme.SkyjoTrackerTheme
+import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 @Composable
 fun FinishScreen(
