@@ -5,6 +5,7 @@
 
 package com.example.skyjotracker.ui.game.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,10 +42,10 @@ import com.example.skyjotracker.ui.game.screens.shared.ScoringTable
 import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 enum class ScoreVisualizer(
-    val label: String
+    @StringRes val label: Int
 ) {
-    LEADERBOARD("Leaderboard"),
-    TABLE("Table")
+    LEADERBOARD(R.string.game_round_leaderboard),
+    TABLE(R.string.game_round_table)
 }
 
 @Composable
@@ -96,7 +97,7 @@ fun RoundScreen(
                     Tab(
                         selected = selectedVisualizer == index,
                         onClick = { selectedVisualizer = index },
-                        text = { Text(visualizer.label) }
+                        text = { Text(stringResource(visualizer.label)) }
                     )
                 }
             }

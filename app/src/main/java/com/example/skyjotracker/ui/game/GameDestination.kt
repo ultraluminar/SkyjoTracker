@@ -183,27 +183,27 @@ fun ContactDialog(onDismiss: () -> Unit, onSend: (String, String, String) -> Uni
     AlertDialog(
         modifier = Modifier.fillMaxWidth(0.95f),
         onDismissRequest = onDismiss,
-        title = { Text(text = "Contact Developer") },
+        title = { Text(text = stringResource(id = R.string.contact_developer)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(id = R.string.contact_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email Address") },
+                    label = { Text(stringResource(id = R.string.contact_email)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = message,
                     onValueChange = { message = it },
-                    label = { Text("Message") },
+                    label = { Text(stringResource(id = R.string.contact_message)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 5,
                     maxLines = 10
@@ -214,10 +214,10 @@ fun ContactDialog(onDismiss: () -> Unit, onSend: (String, String, String) -> Uni
             Button(
                 onClick = { onSend(name, email, message) },
                 enabled = message.isNotBlank() && email.isNotBlank()
-            ) { Text("Send") }
+            ) { Text(stringResource(id = R.string.contact_send)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(id = R.string.contact_cancel)) }
         }
     )
 }
@@ -246,7 +246,7 @@ fun GameScreenAppBar(
                 Icon(
                     painter = painterResource(R.drawable.mail_24dp),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    contentDescription = "Contact"
+                    contentDescription = stringResource(id = R.string.contact_description)
                 )
             }
             IconButton(onClick = onCreditsClick) {

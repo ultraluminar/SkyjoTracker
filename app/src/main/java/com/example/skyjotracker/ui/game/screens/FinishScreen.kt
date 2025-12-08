@@ -66,7 +66,7 @@ fun FinishScreen(
                     Tab(
                         selected = selectedVisualizer == index,
                         onClick = { selectedVisualizer = index },
-                        text = { Text(visualizer.label) }
+                        text = { Text(stringResource(visualizer.label)) }
                     )
                 }
             }

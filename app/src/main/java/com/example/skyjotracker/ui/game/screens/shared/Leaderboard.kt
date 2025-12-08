@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.skyjotracker.R
 import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 @Composable
@@ -36,14 +38,14 @@ fun Leaderboard(
                 .padding(vertical = 8.dp)
         ) {
             Text(
-                text = "Player",
+                text = stringResource(R.string.game_scoring_player),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "Score",
+                text = stringResource(R.string.game_scoring_score),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold

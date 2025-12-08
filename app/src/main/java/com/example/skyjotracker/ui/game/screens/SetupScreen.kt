@@ -132,7 +132,7 @@ fun SetupScreen(
             }
             Spacer(modifier = Modifier.height(40.dp))
             Text(
-                text = "Customize Game",
+                text = stringResource(R.string.game_setup_customize_game),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.secondaryFixedDim,
                 modifier = Modifier
@@ -148,7 +148,7 @@ fun SetupScreen(
                     .padding(bottom = 8.dp)
             )
             SwitchRow(
-                text = "Set Number of Rounds",
+                text = stringResource(R.string.game_setup_set_number_of_rounds),
                 checked = customizeNumberOfRounds,
                 onCheckedChange = {
                     customizeNumberOfRounds = it

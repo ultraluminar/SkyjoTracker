@@ -73,7 +73,7 @@ fun HistoryDestination(
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) { Text("No games found.") }
+            ) { Text(stringResource(R.string.history_no_games_found)) }
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -118,7 +118,7 @@ fun HistoryScreenAppBar(
                 IconButton(onClick = { showFilterMenu = true }) {
                     Icon(
                         painter = painterResource(R.drawable.filter_list_24dp),
-                        contentDescription = "Filter",
+                        contentDescription = stringResource(R.string.history_filter),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -127,7 +127,7 @@ fun HistoryScreenAppBar(
                     onDismissRequest = { showFilterMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("All") },
+                        text = { Text(stringResource(R.string.history_filter_all)) },
                         onClick = {
                             onFilterSelected(HistoryFilterType.ALL)
                             showFilterMenu = false
@@ -143,7 +143,7 @@ fun HistoryScreenAppBar(
                             } else null
                     )
                     DropdownMenuItem(
-                        text = { Text("Finished") },
+                        text = { Text(stringResource(R.string.history_filter_finished)) },
                         onClick = {
                             onFilterSelected(HistoryFilterType.FINISHED)
                             showFilterMenu = false
@@ -159,7 +159,7 @@ fun HistoryScreenAppBar(
                             } else null
                     )
                     DropdownMenuItem(
-                        text = { Text("In Progress") },
+                        text = { Text(stringResource(R.string.history_filter_in_progress)) },
                         onClick = {
                             onFilterSelected(HistoryFilterType.IN_PROGRESS)
                             showFilterMenu = false
@@ -182,7 +182,7 @@ fun HistoryScreenAppBar(
                 IconButton(onClick = { showSortMenu = true }) {
                     Icon(
                         painter = painterResource(R.drawable.sort_24dp),
-                        contentDescription = "Sort",
+                        contentDescription = stringResource(R.string.history_sort),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -191,7 +191,7 @@ fun HistoryScreenAppBar(
                     onDismissRequest = { showSortMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Newest First") },
+                        text = { Text(stringResource(R.string.history_sort_newest_first)) },
                         onClick = {
                             onSortSelected(HistorySortType.NEWEST_FIRST)
                             showSortMenu = false
@@ -207,7 +207,7 @@ fun HistoryScreenAppBar(
                             } else null
                     )
                     DropdownMenuItem(
-                        text = { Text("Oldest First") },
+                        text = { Text(stringResource(R.string.history_sort_oldest_first)) },
                         onClick = {
                             onSortSelected(HistorySortType.OLDEST_FIRST)
                             showSortMenu = false
@@ -241,9 +241,9 @@ fun GameHistoryItem(game: GameEntity, onResumeClick: (Long) -> Unit, onViewClick
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Game #${game.gameId}", style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(R.string.history_game_number, game.gameId), style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = if (game.isFinished) "Finished" else "In Progress",
+                    text = if (game.isFinished) stringResource(R.string.history_filter_finished) else stringResource(R.string.history_filter_in_progress),
                     style = MaterialTheme.typography.labelMedium,
                     color =
                         if (game.isFinished) MaterialTheme.colorScheme.primary
@@ -261,10 +261,10 @@ fun GameHistoryItem(game: GameEntity, onResumeClick: (Long) -> Unit, onViewClick
                 if (game.isFinished) {
                     androidx.compose.material3.OutlinedButton(
                         onClick = { onViewClick(game.gameId) }
-                    ) { Text("View Results") }
+                    ) { Text(stringResource(R.string.history_view_results)) }
                 } else {
                     androidx.compose.material3.Button(onClick = { onResumeClick(game.gameId) }) {
-                        Text("Resume")
+                        Text(stringResource(R.string.history_resume))
                     }
                 }
             }

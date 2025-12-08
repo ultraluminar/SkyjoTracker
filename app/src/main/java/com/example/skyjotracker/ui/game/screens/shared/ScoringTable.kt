@@ -17,11 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.skyjotracker.R
 import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 
 private val cellWidth: Dp = 72.dp
@@ -74,7 +76,7 @@ private fun ScoreRow(round: Int, scoreSheet: Map<Int, Map<Int, Int>>, sortedPlay
     Row {
         TableCell(text = round.toString(), isHeader = true)
         sortedPlayerIds.forEach { playerId ->
-            val score = scoreSheet[round]?.get(playerId)?.toString() ?: "0"
+            val score = scoreSheet[round]?.get(playerId)?.toString() ?: stringResource(R.string.game_scoring_zero)
             TableCell(text = score)
         }
     }
@@ -86,9 +88,9 @@ private fun FooterRow(totalScores: Map<Int, Int>, sortedPlayerIds: List<Int>) {
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        TableCell(text = "Total", isHeader = true)
+        TableCell(text = stringResource(R.string.game_scoring_total), isHeader = true)
         sortedPlayerIds.forEach { playerId ->
-            val total = totalScores[playerId]?.toString() ?: "0"
+            val total = totalScores[playerId]?.toString() ?: stringResource(R.string.game_scoring_zero)
             TableCell(text = total, isTotal = true)
         }
     }

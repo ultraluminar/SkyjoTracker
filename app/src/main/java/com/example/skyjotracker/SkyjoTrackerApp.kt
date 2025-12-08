@@ -29,7 +29,7 @@ enum class AppDestination(
 ) {
     GAME(label = R.string.app_destination_game, icon = R.drawable.playing_cards_24dp),
     HISTORY(label = R.string.app_destination_history, icon = R.drawable.history_24dp),
-    STATISTICS(label = R.string.app_destination_statistics, icon = R.drawable.analytics_24dp),
+    // STATISTICS(label = R.string.app_destination_statistics, icon = R.drawable.analytics_24dp),
 }
 
 // @PreviewScreenSizes
@@ -91,12 +91,12 @@ fun SkyjoTrackerApp() {
                     }
                 )
             }
-            composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
+            // composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
         }
     }
 }
 
-@Composable
-fun StatisticsDestination() {
-    Text("Here you can see your statistics.")
-}
+//@Composable
+//fun StatisticsDestination() {
+//    Text("Here you can see your statistics.")
+//}
