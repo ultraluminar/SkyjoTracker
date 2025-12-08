@@ -1,9 +1,13 @@
 package com.example.skyjotracker.ui.game
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri.parse
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -11,8 +15,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -23,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +64,8 @@ fun GameDestination(
     val currentScreen =
         GameScreen.valueOf(backStackEntry?.destination?.route ?: GameScreen.SETUP.name)
     var showCreditDialog by remember { mutableStateOf(false) }
+    var showContactDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
         viewModel.navigationEvent.collect { screen -> navController.navigate(screen.name) }
@@ -69,11 +78,22 @@ fun GameDestination(
         )
     }
 
+    if (showContactDialog) {
+        ContactDialog(
+            onDismiss = { showContactDialog = false },
+            onSend = { name, email, message ->
+                sendEmail(context, name, email, message)
+                showContactDialog = false
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             GameScreenAppBar(
                 currentScreen = currentScreen,
-                onCreditsClick = { showCreditDialog = true }
+                onCreditsClick = { showCreditDialog = true },
+                onContactClick = { showContactDialog = true }
             )
         }
     ) { innerPadding ->
@@ -154,27 +174,81 @@ fun AppCreditsDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     )
 }
 
+@Composable
+fun ContactDialog(onDismiss: () -> Unit, onSend: (String, String, String) -> Unit) {
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
+    AlertDialog(
+        modifier = Modifier.fillMaxWidth(0.95f),
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Contact Developer") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email Address") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = message,
+                    onValueChange = { message = it },
+                    label = { Text("Message") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 5,
+                    maxLines = 10
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onSend(name, email, message) },
+                enabled = message.isNotBlank() && email.isNotBlank()
+            ) { Text("Send") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreenAppBar(
     currentScreen: GameScreen,
     onCreditsClick: () -> Unit,
+    onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = {
-            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(
-                    text = stringResource(currentScreen.title),
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                text = stringResource(currentScreen.title),
+                fontWeight = FontWeight.SemiBold
+            )
         },
         colors =
             TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
         actions = {
+            IconButton(onClick = onContactClick) {
+                Icon(
+                    painter = painterResource(R.drawable.mail_24dp),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    contentDescription = "Contact"
+                )
+            }
             IconButton(onClick = onCreditsClick) {
                 Icon(
                     painter = painterResource(R.drawable.info_24dp),
@@ -185,4 +259,33 @@ fun GameScreenAppBar(
         },
         modifier = modifier
     )
+}
+
+private fun sendEmail(
+    context: Context,
+    name: String,
+    email: String,
+    message: String
+) {
+    val intent =
+        Intent(Intent.ACTION_SENDTO).apply {
+            data = parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, "feedback@skyjotracker.com")
+            putExtra(Intent.EXTRA_SUBJECT, "[APP] SkyjoTracker Feedback")
+            putExtra(
+                Intent.EXTRA_TEXT,
+                """
+                        Name: $name
+                        Email: $email
+
+                        Message:
+                        $message
+                        """.trimIndent()
+            )
+        }
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        // fail silently
+    }
 }
