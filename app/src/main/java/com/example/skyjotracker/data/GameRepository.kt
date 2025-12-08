@@ -20,16 +20,28 @@ class GameRepository(private val gameDao: GameDao) {
 
     suspend fun saveScore(gameId: Long, playerId: Long, roundNumber: Int, scoreValue: Int) {
         val score =
-                ScoreEntity(
-                        gameId = gameId,
-                        playerId = playerId,
-                        roundNumber = roundNumber,
-                        score = scoreValue
-                )
+            ScoreEntity(
+                gameId = gameId,
+                playerId = playerId,
+                roundNumber = roundNumber,
+                score = scoreValue
+            )
         gameDao.insertScore(score)
     }
 
     suspend fun setGameFinished(gameId: Long) {
         gameDao.setGameFinished(gameId)
+    }
+
+    suspend fun getGame(gameId: Long): GameEntity? {
+        return gameDao.getGame(gameId)
+    }
+
+    suspend fun getPlayers(gameId: Long): List<PlayerEntity> {
+        return gameDao.getPlayersForGame(gameId)
+    }
+
+    suspend fun getScores(gameId: Long): List<ScoreEntity> {
+        return gameDao.getScoresForGame(gameId)
     }
 }

@@ -37,7 +37,7 @@ enum class AppDestination(
 fun SkyjoTrackerApp() {
     val context = LocalContext.current
     val app = context.applicationContext as SkyjoApplication
-    val gameViewModel: GameViewModel = 
+    val gameViewModel: GameViewModel =
         viewModel(factory = GameViewModel.Factory(app.repository))
     val historyViewModel: HistoryViewModel =
         viewModel(factory = HistoryViewModel.Factory(app.repository))
@@ -79,7 +79,17 @@ fun SkyjoTrackerApp() {
         ) {
             composable(AppDestination.GAME.name) { GameDestination(viewModel = gameViewModel) }
             composable(AppDestination.HISTORY.name) {
-                HistoryDestination(viewModel = historyViewModel)
+                HistoryDestination(
+                    viewModel = historyViewModel,
+                    onResumeClick = { gameId ->
+                        gameViewModel.loadGame(gameId)
+                        navController.navigate(AppDestination.GAME.name)
+                    },
+                    onViewClick = { gameId ->
+                        gameViewModel.loadGame(gameId)
+                        navController.navigate(AppDestination.GAME.name)
+                    }
+                )
             }
             composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
         }

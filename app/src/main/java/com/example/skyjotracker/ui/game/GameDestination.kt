@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +57,10 @@ fun GameDestination(
     val currentScreen =
         GameScreen.valueOf(backStackEntry?.destination?.route ?: GameScreen.SETUP.name)
     var showCreditDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.navigationEvent.collect { screen -> navController.navigate(screen.name) }
+    }
 
     if (showCreditDialog) {
         AppCreditsDialog(

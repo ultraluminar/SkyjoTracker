@@ -49,6 +49,8 @@ import java.util.Locale
 @Composable
 fun HistoryDestination(
     viewModel: HistoryViewModel = viewModel(),
+    onResumeClick: (Long) -> Unit,
+    onViewClick: (Long) -> Unit
 ) {
     val games by viewModel.games.collectAsState()
     val filterType by viewModel.filterType.collectAsState()
@@ -79,7 +81,11 @@ fun HistoryDestination(
                     .padding(innerPadding),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) { items(games, key = { it.gameId }) { game -> GameHistoryItem(game) } }
+            ) {
+                items(games, key = { it.gameId }) { game ->
+                    GameHistoryItem(game, onResumeClick, onViewClick)
+                }
+            }
         }
     }
 }
@@ -223,7 +229,7 @@ fun HistoryScreenAppBar(
 }
 
 @Composable
-fun GameHistoryItem(game: GameEntity) {
+fun GameHistoryItem(game: GameEntity, onResumeClick: (Long) -> Unit, onViewClick: (Long) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
@@ -250,6 +256,18 @@ fun GameHistoryItem(game: GameEntity) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                if (game.isFinished) {
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = { onViewClick(game.gameId) }
+                    ) { Text("View Results") }
+                } else {
+                    androidx.compose.material3.Button(onClick = { onResumeClick(game.gameId) }) {
+                        Text("Resume")
+                    }
+                }
+            }
         }
     }
 }
@@ -271,7 +289,9 @@ fun GameHistoryItemPreviewFinished() {
                         gameId = 123,
                         timestamp = System.currentTimeMillis(),
                         isFinished = true
-                    )
+                    ),
+                onResumeClick = {},
+                onViewClick = {}
             )
         }
     }
@@ -288,7 +308,9 @@ fun GameHistoryItemPreviewInProgress() {
                         gameId = 456,
                         timestamp = System.currentTimeMillis(),
                         isFinished = false
-                    )
+                    ),
+                onResumeClick = {},
+                onViewClick = {}
             )
         }
     }
