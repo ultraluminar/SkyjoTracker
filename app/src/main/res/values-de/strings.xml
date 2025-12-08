@@ -1,0 +1,84 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">Skyjo Tracker</string>
+    <string name="app_destination_game">Spielen</string>
+    <string name="app_destination_history">Gespeichert</string>
+    <string name="app_destination_statistics">Statistiken</string>
+
+    <!-- App Info -->
+    <string name="app_info">App-Info und Credits</string>
+    <string name="app_credits_title">App-Credits</string>
+    <string name="app_credits_text">
+        Hallo!
+        \nIch habe die App Entwickelt.
+        \nIch habe sie als Hausaufgabe in
+        \n\'Grafische Programmierung für mobile Geräte\' erstellt.
+        \n\nHier sind ein paar Daten über mich:
+        \nName: Adrian Lösch
+        \nGruppe: MKDfu-22*
+    </string>
+
+    <!-- Spiel-Setup -->
+    <string name="game_setup">Setup</string>
+    <string name="game_setup_heading">Neues Spiel</string>
+    <string name="game_setup_players_description">Gib die Namen der Spieler für dieses Spiel ein</string>
+    <string name="game_setup_rounds_description">Gib eine Rundenzahl ein oder spiele unbegrenzt</string>
+    <string name="game_setup_player_input_label">Spieler %s</string>
+    <string name="game_setup_add_player">Spieler hinzufügen</string>
+    <string name="game_setup_number_of_rounds">%s Runden</string>
+    <string name="game_setup_start_game">Spiel starten</string>
+    <string name="game_setup_customize_game">Spiel anpassen</string>
+    <string name="game_setup_set_number_of_rounds">Rundenzahl festlegen</string>
+
+    <!-- Spielrunde -->
+    <string name="game_round">Runde</string>
+    <string name="game_round_heading">%1$d. Runde</string>
+    <string name="game_round_description">Übersicht über die aktuellen Punkte</string>
+    <string name="game_round_enter_scores">Ergebnisse eingeben</string>
+    <string name="game_round_leaderboard">Bestenliste</string>
+    <string name="game_round_table">Tabelle</string>
+
+    <!-- Punktevergabe -->
+    <string name="game_scoring">Punkte</string>
+    <string name="game_scoring_heading">%1$d. Runde - Ergebnisse</string>
+    <string name="game_scoring_description">Gib die Punkte jedes Spielers ein</string>
+    <string name="game_scoring_input_label">Punkte</string>
+    <string name="game_scoring_next_round">Nächste Runde</string>
+    <string name="game_scoring_total">Gesamt</string>
+    <string name="game_scoring_zero">0</string>
+    <string name="game_scoring_player">Spieler</string>
+    <string name="game_scoring_score">Punkte</string>
+
+    <!-- Spielende -->
+    <string name="game_finish">Ergebnisse</string>
+    <string name="game_finish_heading">Ergebnisse</string>
+    <string name="game_finish_description">Die Endergebnisse deines Spiels</string>
+    <string name="game_finish_new_game">Neues Spiel</string>
+    <string name="game_finish_game">Spiel beenden</string>
+
+    <!-- Allgemein -->
+    <string name="back_button">Zurück-Button</string>
+    <string name="confirm">Bestätigen</string>
+
+    <!-- Kontakt -->
+    <string name="contact_developer">Entwickler kontaktieren</string>
+    <string name="contact_name">Name</string>
+    <string name="contact_email">E-Mail-Adresse</string>
+    <string name="contact_message">Nachricht</string>
+    <string name="contact_send">Senden</string>
+    <string name="contact_cancel">Abbrechen</string>
+    <string name="contact_description">Kontakt</string>
+
+    <!-- Verlauf -->
+    <string name="history_no_games_found">Keine Spiele gefunden.</string>
+    <string name="history_filter">Filter</string>
+    <string name="history_filter_all">Alle</string>
+    <string name="history_filter_finished">Beendet</string>
+    <string name="history_filter_in_progress">Laufend</string>
+    <string name="history_sort">Sortieren</string>
+    <string name="history_sort_newest_first">Neueste zuerst</string>
+    <string name="history_sort_oldest_first">Älteste zuerst</string>
+    <string name="history_game_number">Spiel #%d</string>
+    <string name="history_view_results">Ergebnisse ansehen</string>
+    <string name="history_resume">Fortsetzen</string>
+</resources>
