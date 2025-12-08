@@ -134,7 +134,8 @@ fun GameDestination(
                         navController.popBackStack(GameScreen.SETUP.name, inclusive = false)
                     },
                     playerNames = uiState.playerNames,
-                    totalScores = uiState.totalScores
+                    totalScores = uiState.totalScores,
+                    scoreSheet = uiState.scoreSheet
                 )
             }
         }
