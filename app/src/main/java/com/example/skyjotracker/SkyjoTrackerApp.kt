@@ -37,7 +37,8 @@ enum class AppDestination(
 fun SkyjoTrackerApp() {
     val context = LocalContext.current
     val app = context.applicationContext as SkyjoApplication
-    val gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory(app.repository))
+    val gameViewModel: GameViewModel = 
+        viewModel(factory = GameViewModel.Factory(app.repository))
     val historyViewModel: HistoryViewModel =
         viewModel(factory = HistoryViewModel.Factory(app.repository))
 
