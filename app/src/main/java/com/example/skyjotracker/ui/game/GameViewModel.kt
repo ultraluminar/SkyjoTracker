@@ -21,16 +21,16 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
 
     fun setPlayerNames(inputPlayerNames: List<String>) {
         val playerNames =
-            inputPlayerNames
-                .filter { it.isNotEmpty() }
-                .mapIndexed { index, name -> index + 1 to name }
-                .toMap()
+                inputPlayerNames
+                        .filter { it.isNotEmpty() }
+                        .mapIndexed { index, name -> index + 1 to name }
+                        .toMap()
 
         _uiState.update { currentState ->
             currentState.copy(
-                playerNames = playerNames,
-                currentRound = 1,
-                totalScores = playerNames.mapValues { 0 }
+                    playerNames = playerNames,
+                    currentRound = 1,
+                    totalScores = playerNames.mapValues { 0 }
             )
         }
 
@@ -46,11 +46,7 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
     }
 
     fun setNumberOfRounds(inputNumberOfRounds: Int?) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                numberOfRounds = inputNumberOfRounds
-            )
-        }
+        _uiState.update { currentState -> currentState.copy(numberOfRounds = inputNumberOfRounds) }
     }
 
     fun setPlayerScores(inputPlayerScores: Map<Int, Int>) {
@@ -58,10 +54,7 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
         val currentRound = _uiState.value.currentRound
         scoreSheet[currentRound] = inputPlayerScores
         _uiState.update { currentState ->
-            currentState.copy(
-                currentRound = currentRound + 1,
-                scoreSheet = scoreSheet
-            )
+            currentState.copy(currentRound = currentRound + 1, scoreSheet = scoreSheet)
         }
         setTotalScores()
 
@@ -73,6 +66,12 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
                         repository.saveScore(gameId, dbPlayerId, currentRound, score)
                     }
                 }
+                // if the current round is the last round, set the game as finished
+                if (_uiState.value.numberOfRounds != null &&
+                                _uiState.value.numberOfRounds == currentRound
+                ) {
+                    setGameFinished()
+                }
             }
         }
     }
@@ -80,34 +79,34 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
     fun reset() {
         _uiState.update { currentState ->
             currentState.copy(
-                playerNames = mapOf(),
-                currentRound = 1,
-                scoreSheet = mapOf(),
-                totalScores = mapOf(),
-                numberOfRounds = null
+                    playerNames = mapOf(),
+                    currentRound = 1,
+                    scoreSheet = mapOf(),
+                    totalScores = mapOf(),
+                    numberOfRounds = null
             )
         }
         currentGameId = null
         playerDbIds.clear()
     }
 
+    fun setGameFinished() {
+        viewModelScope.launch {
+            currentGameId?.let { gameId -> repository.setGameFinished(gameId) }
+        }
+    }
+
     private fun setTotalScores() {
         val scoreSheet = _uiState.value.scoreSheet
         val playerNames = _uiState.value.playerNames
         val totalScores = mutableMapOf<Int, Int>()
-        playerNames.keys.forEach { playerId ->
-            totalScores[playerId] = 0
-        }
+        playerNames.keys.forEach { playerId -> totalScores[playerId] = 0 }
         scoreSheet.values.forEach { roundScores ->
             roundScores.forEach { (playerId, score) ->
                 totalScores[playerId] = (totalScores[playerId] ?: 0) + score
             }
         }
-        _uiState.update { currentState ->
-            currentState.copy(
-                totalScores = totalScores
-            )
-        }
+        _uiState.update { currentState -> currentState.copy(totalScores = totalScores) }
     }
 
     class Factory(private val repository: GameRepository) : ViewModelProvider.Factory {

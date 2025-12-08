@@ -92,7 +92,10 @@ fun GameDestination(
             }
             composable(route = GameScreen.ROUND.name) {
                 RoundScreen(
-                    onFinishGame = { navController.navigate(GameScreen.FINISH.name) },
+                    onFinishGame = {
+                        viewModel.setGameFinished()
+                        navController.navigate(GameScreen.FINISH.name)
+                    },
                     onRoundComplete = { navController.navigate(GameScreen.SCORING.name) },
                     playerNames = uiState.playerNames,
                     currentRound = uiState.currentRound,
@@ -102,9 +105,9 @@ fun GameDestination(
                 )
             }
             composable(route = GameScreen.SCORING.name) {
-                val lastRound = uiState.currentRound == uiState.numberOfRounds
+                val isLastRound = uiState.currentRound == uiState.numberOfRounds
                 val route =
-                    if (lastRound) {
+                    if (isLastRound) {
                         GameScreen.FINISH.name
                     } else {
                         GameScreen.ROUND.name

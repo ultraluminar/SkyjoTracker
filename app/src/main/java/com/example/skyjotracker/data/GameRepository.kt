@@ -28,4 +28,8 @@ class GameRepository(private val gameDao: GameDao) {
                 )
         gameDao.insertScore(score)
     }
+
+    suspend fun setGameFinished(gameId: Long) {
+        gameDao.setGameFinished(gameId)
+    }
 }

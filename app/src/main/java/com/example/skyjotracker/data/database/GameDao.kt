@@ -30,4 +30,7 @@ interface GameDao {
     // Helper to get scores for a specific game and player handy for some logic if needed
     @Query("SELECT * FROM scores WHERE gameId = :gameId AND playerId = :playerId")
     suspend fun getScoresForPlayer(gameId: Long, playerId: Long): List<ScoreEntity>
+
+    @Query("UPDATE games SET isFinished = 1 WHERE gameId = :gameId")
+    suspend fun setGameFinished(gameId: Long)
 }
