@@ -2,7 +2,7 @@
     <!-- App -->
     <string name="app_name">Skyjo Tracker</string>
     <string name="app_destination_game">Spielen</string>
-    <string name="app_destination_history">Gespeichert</string>
+    <string name="app_destination_history">Verlauf</string>
     <string name="app_destination_statistics">Statistiken</string>
 
     <!-- App Info -->
@@ -68,6 +68,10 @@
     <string name="contact_send">Senden</string>
     <string name="contact_cancel">Abbrechen</string>
     <string name="contact_description">Kontakt</string>
+
+    <!-- Settings -->
+    <string name="settings">Einstellungen</string>
+    <string name="language">Sprache</string>
 
     <!-- Verlauf -->
     <string name="history_no_games_found">Keine Spiele gefunden.</string>

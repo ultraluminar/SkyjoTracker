@@ -22,10 +22,11 @@ import com.example.skyjotracker.ui.game.GameDestination
 import com.example.skyjotracker.ui.game.GameViewModel
 import com.example.skyjotracker.ui.history.HistoryDestination
 import com.example.skyjotracker.ui.history.HistoryViewModel
+import com.example.skyjotracker.ui.settings.SettingsViewModel
 
 enum class AppDestination(
-    @StringRes val label: Int,
-    @DrawableRes val icon: Int,
+        @StringRes val label: Int,
+        @DrawableRes val icon: Int,
 ) {
     GAME(label = R.string.app_destination_game, icon = R.drawable.playing_cards_24dp),
     HISTORY(label = R.string.app_destination_history, icon = R.drawable.history_24dp),
@@ -34,13 +35,12 @@ enum class AppDestination(
 
 // @PreviewScreenSizes
 @Composable
-fun SkyjoTrackerApp() {
+fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
     val context = LocalContext.current
     val app = context.applicationContext as SkyjoApplication
-    val gameViewModel: GameViewModel =
-        viewModel(factory = GameViewModel.Factory(app.repository))
+    val gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory(app.repository))
     val historyViewModel: HistoryViewModel =
-        viewModel(factory = HistoryViewModel.Factory(app.repository))
+            viewModel(factory = HistoryViewModel.Factory(app.repository))
 
     val navController = rememberNavController()
 
@@ -48,47 +48,52 @@ fun SkyjoTrackerApp() {
     val currentDestination = navBackStackEntry?.destination?.route
 
     NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            AppDestination.entries.forEach { destination ->
-                item(
-                    icon = {
-                        Icon(
-                            painter = painterResource(destination.icon),
-                            contentDescription = stringResource(destination.label)
-                        )
-                    },
-                    label = { Text(stringResource(destination.label)) },
-                    selected = currentDestination == destination.name,
-                    onClick = {
-                        navController.navigate(destination.name) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+            navigationSuiteItems = {
+                AppDestination.entries.forEach { destination ->
+                    item(
+                            icon = {
+                                Icon(
+                                        painter = painterResource(destination.icon),
+                                        contentDescription = stringResource(destination.label)
+                                )
+                            },
+                            label = { Text(stringResource(destination.label)) },
+                            selected = currentDestination == destination.name,
+                            onClick = {
+                                navController.navigate(destination.name) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
+                    )
+                }
             }
-        }
     ) {
         NavHost(
-            navController = navController,
-            startDestination = AppDestination.GAME.name,
-            modifier = Modifier.fillMaxSize()
+                navController = navController,
+                startDestination = AppDestination.GAME.name,
+                modifier = Modifier.fillMaxSize()
         ) {
-            composable(AppDestination.GAME.name) { GameDestination(viewModel = gameViewModel) }
+            composable(AppDestination.GAME.name) {
+                GameDestination(
+                        gameViewModel = gameViewModel,
+                        settingsViewModel = settingsViewModel
+                )
+            }
             composable(AppDestination.HISTORY.name) {
                 HistoryDestination(
-                    viewModel = historyViewModel,
-                    onResumeClick = { gameId ->
-                        gameViewModel.loadGame(gameId)
-                        navController.navigate(AppDestination.GAME.name)
-                    },
-                    onViewClick = { gameId ->
-                        gameViewModel.loadGame(gameId)
-                        navController.navigate(AppDestination.GAME.name)
-                    }
+                        viewModel = historyViewModel,
+                        onResumeClick = { gameId ->
+                            gameViewModel.loadGame(gameId)
+                            navController.navigate(AppDestination.GAME.name)
+                        },
+                        onViewClick = { gameId ->
+                            gameViewModel.loadGame(gameId)
+                            navController.navigate(AppDestination.GAME.name)
+                        }
                 )
             }
             // composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
@@ -96,7 +101,7 @@ fun SkyjoTrackerApp() {
     }
 }
 
-//@Composable
-//fun StatisticsDestination() {
+// @Composable
+// fun StatisticsDestination() {
 //    Text("Here you can see your statistics.")
-//}
+// }

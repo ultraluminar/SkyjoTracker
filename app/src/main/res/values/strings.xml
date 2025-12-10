@@ -55,12 +55,15 @@
     <string name="confirm">Confirm</string>
     <string name="game_finish_game">Finish Game</string>
     <string name="contact_developer">Contact Developer</string>
+    <string name="contact_description">Contact</string>
     <string name="contact_name">Name</string>
     <string name="contact_email">Email Address</string>
     <string name="contact_message">Message</string>
     <string name="contact_send">Send</string>
     <string name="contact_cancel">Cancel</string>
-    <string name="contact_description">Contact</string>
+
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
 
 <!-- History Destination -->
     <string name="history_no_games_found">No games found.</string>
