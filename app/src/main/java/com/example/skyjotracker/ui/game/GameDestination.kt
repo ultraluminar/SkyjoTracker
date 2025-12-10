@@ -1,26 +1,16 @@
 package com.example.skyjotracker.ui.game
 
-import android.content.Context
-import android.content.Intent
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,15 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -51,29 +36,28 @@ import com.example.skyjotracker.ui.game.screens.RoundScreen
 import com.example.skyjotracker.ui.game.screens.ScoringScreen
 import com.example.skyjotracker.ui.game.screens.SetupScreen
 import com.example.skyjotracker.ui.settings.SettingsViewModel
-import java.util.Locale
 
 enum class GameScreen(
     @StringRes val title: Int,
 ) {
-    SETUP(title = R.string.game_setup), ROUND(title = R.string.game_round), SCORING(title = R.string.game_scoring), FINISH(
-        title = R.string.game_finish
-    )
+    SETUP(title = R.string.game_setup),
+    ROUND(title = R.string.game_round),
+    SCORING(title = R.string.game_scoring),
+    FINISH(title = R.string.game_finish)
 }
 
 @Composable
 fun GameDestination(
     gameViewModel: GameViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onSettingsClick: () -> Unit,
+    onContactClick: () -> Unit
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen =
         GameScreen.valueOf(backStackEntry?.destination?.route ?: GameScreen.SETUP.name)
     var showCreditDialog by remember { mutableStateOf(false) }
-    var showContactDialog by remember { mutableStateOf(false) }
-    var showSettingsDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     LaunchedEffect(gameViewModel) {
         gameViewModel.navigationEvent.collect { screen -> navController.navigate(screen.name) }
@@ -86,29 +70,16 @@ fun GameDestination(
         )
     }
 
-    if (showContactDialog) {
-        ContactDialog(onDismiss = { showContactDialog = false }, onSend = { name, email, message ->
-            sendEmail(context, name, email, message)
-            showContactDialog = false
-        })
-    }
-
-    if (showSettingsDialog) {
-        val settingsUiState by settingsViewModel.uiState.collectAsState()
-        SettingsDialog(
-            currentLocale = settingsUiState.currentLocale,
-            onLanguageSelected = { locale -> settingsViewModel.setLanguage(locale) },
-            onDismiss = { showSettingsDialog = false })
-    }
-
     Scaffold(
         topBar = {
             GameScreenAppBar(
                 currentScreen = currentScreen,
                 onCreditsClick = { showCreditDialog = true },
-                onContactClick = { showContactDialog = true },
-                onSettingsClick = { showSettingsDialog = true })
-        }) { innerPadding ->
+                onContactClick = onContactClick,
+                onSettingsClick = onSettingsClick
+            )
+        }
+    ) { innerPadding ->
         val uiState by gameViewModel.uiState.collectAsState()
 
         NavHost(
@@ -124,14 +95,15 @@ fun GameDestination(
                         gameViewModel.setPlayerNames(playerNames)
                         gameViewModel.setNumberOfRounds(numberOfRounds)
                         navController.navigate(GameScreen.ROUND.name)
-                    })
+                    }
+                )
             }
             composable(route = GameScreen.ROUND.name) {
                 RoundScreen(
                     onFinishGame = {
-                    gameViewModel.setGameFinished()
-                    navController.navigate(GameScreen.FINISH.name)
-                },
+                        gameViewModel.setGameFinished()
+                        navController.navigate(GameScreen.FINISH.name)
+                    },
                     onRoundComplete = { navController.navigate(GameScreen.SCORING.name) },
                     playerNames = uiState.playerNames,
                     currentRound = uiState.currentRound,
@@ -142,11 +114,12 @@ fun GameDestination(
             }
             composable(route = GameScreen.SCORING.name) {
                 val isLastRound = uiState.currentRound == uiState.numberOfRounds
-                val route = if (isLastRound) {
-                    GameScreen.FINISH.name
-                } else {
-                    GameScreen.ROUND.name
-                }
+                val route =
+                    if (isLastRound) {
+                        GameScreen.FINISH.name
+                    } else {
+                        GameScreen.ROUND.name
+                    }
                 ScoringScreen(
                     onScoringComplete = {
                         gameViewModel.setPlayerScores(it)
@@ -180,56 +153,8 @@ fun AppCreditsDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
         text = { Text(text = stringResource(R.string.app_credits_text)) },
         confirmButton = {
             Button(onClick = onConfirm) { Text(text = stringResource(R.string.confirm)) }
-        })
-}
-
-@Composable
-fun ContactDialog(onDismiss: () -> Unit, onSend: (String, String, String) -> Unit) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-
-    AlertDialog(
-        modifier = Modifier.fillMaxWidth(0.95f),
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(id = R.string.contact_developer)) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(id = R.string.contact_name)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(stringResource(id = R.string.contact_email)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = message,
-                    onValueChange = { message = it },
-                    label = { Text(stringResource(id = R.string.contact_message)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 5,
-                    maxLines = 10
-                )
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = { onSend(name, email, message) },
-                enabled = message.isNotBlank() && email.isNotBlank()
-            ) { Text(stringResource(id = R.string.contact_send)) }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(id = R.string.contact_cancel))
-            }
-        })
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -244,9 +169,12 @@ fun GameScreenAppBar(
     TopAppBar(
         title = {
             Text(text = stringResource(currentScreen.title), fontWeight = FontWeight.SemiBold)
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ), actions = {
+        },
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
+        actions = {
             IconButton(onClick = onContactClick) {
                 Icon(
                     painter = painterResource(R.drawable.mail_24dp),
@@ -268,71 +196,7 @@ fun GameScreenAppBar(
                     contentDescription = stringResource(R.string.settings)
                 )
             }
-        }, modifier = modifier
-    )
-}
-
-@Composable
-fun SettingsDialog(
-    currentLocale: Locale, onLanguageSelected: (String) -> Unit, onDismiss: () -> Unit
-) {
-    val languages = listOf("English" to "en", "Deutsch" to "de")
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.settings)) },
-        text = {
-            Column {
-                Text(
-                    text = stringResource(R.string.language),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                languages.forEach { (label, code) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = currentLocale.language == code,
-                                onClick = { onLanguageSelected(code) },
-                                role = Role.RadioButton
-                            )
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(selected = currentLocale.language == code, onClick = null)
-                        Text(
-                            text = label,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }
-                }
-            }
         },
-        confirmButton = {
-            Button(onClick = onDismiss) { Text(text = stringResource(R.string.confirm)) }
-        })
-}
-
-private fun sendEmail(context: Context, name: String, email: String, message: String) {
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = "mailto:".toUri()
-        putExtra(Intent.EXTRA_EMAIL, "feedback@skyjotracker.com")
-        putExtra(Intent.EXTRA_SUBJECT, "[APP] SkyjoTracker Feedback")
-        putExtra(
-            Intent.EXTRA_TEXT, """
-                        Name: $name
-                        Email: $email
-
-                        Message:
-                        $message
-                        """.trimIndent()
-        )
-    }
-    try {
-        context.startActivity(intent)
-    } catch (e: Exception) {
-        // fail silently
-    }
+        modifier = modifier
+    )
 }

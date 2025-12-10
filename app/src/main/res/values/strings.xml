@@ -51,6 +51,7 @@
     <string name="game_finish_new_game">New Game</string>
 
 <!-- General-->
+    <string name="back">Back</string>
     <string name="back_button">Back Button</string>
     <string name="confirm">Confirm</string>
     <string name="game_finish_game">Finish Game</string>

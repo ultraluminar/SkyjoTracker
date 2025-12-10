@@ -57,6 +57,7 @@
     <string name="game_finish_game">Spiel beenden</string>
 
     <!-- Allgemein -->
+    <string name="back">Zurück</string>
     <string name="back_button">Zurück-Button</string>
     <string name="confirm">Bestätigen</string>
 

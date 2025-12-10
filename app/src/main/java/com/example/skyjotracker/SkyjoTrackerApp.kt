@@ -25,11 +25,13 @@ import com.example.skyjotracker.ui.history.HistoryViewModel
 import com.example.skyjotracker.ui.settings.SettingsViewModel
 
 enum class AppDestination(
-        @StringRes val label: Int,
-        @DrawableRes val icon: Int,
+    @StringRes val label: Int,
+    @DrawableRes val icon: Int,
 ) {
     GAME(label = R.string.app_destination_game, icon = R.drawable.playing_cards_24dp),
     HISTORY(label = R.string.app_destination_history, icon = R.drawable.history_24dp),
+    SETTINGS(label = R.string.settings, icon = R.drawable.settings_24dp),
+    CONTACT(label = R.string.contact_developer, icon = R.drawable.mail_24dp),
     // STATISTICS(label = R.string.app_destination_statistics, icon = R.drawable.analytics_24dp),
 }
 
@@ -40,7 +42,7 @@ fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
     val app = context.applicationContext as SkyjoApplication
     val gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory(app.repository))
     val historyViewModel: HistoryViewModel =
-            viewModel(factory = HistoryViewModel.Factory(app.repository))
+        viewModel(factory = HistoryViewModel.Factory(app.repository))
 
     val navController = rememberNavController()
 
@@ -48,52 +50,66 @@ fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
     val currentDestination = navBackStackEntry?.destination?.route
 
     NavigationSuiteScaffold(
-            navigationSuiteItems = {
-                AppDestination.entries.forEach { destination ->
-                    item(
-                            icon = {
-                                Icon(
-                                        painter = painterResource(destination.icon),
-                                        contentDescription = stringResource(destination.label)
-                                )
-                            },
-                            label = { Text(stringResource(destination.label)) },
-                            selected = currentDestination == destination.name,
-                            onClick = {
-                                navController.navigate(destination.name) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+        navigationSuiteItems = {
+            // Only show Game and History in the bottom navigation bar
+            listOf(AppDestination.GAME, AppDestination.HISTORY).forEach { destination ->
+                item(
+                    icon = {
+                        Icon(
+                            painter = painterResource(destination.icon),
+                            contentDescription = stringResource(destination.label)
+                        )
+                    },
+                    label = { Text(stringResource(destination.label)) },
+                    selected = currentDestination == destination.name,
+                    onClick = {
+                        navController.navigate(destination.name) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
                             }
-                    )
-                }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
             }
+        }
     ) {
         NavHost(
-                navController = navController,
-                startDestination = AppDestination.GAME.name,
-                modifier = Modifier.fillMaxSize()
+            navController = navController,
+            startDestination = AppDestination.GAME.name,
+            modifier = Modifier.fillMaxSize()
         ) {
             composable(AppDestination.GAME.name) {
                 GameDestination(
-                        gameViewModel = gameViewModel,
-                        settingsViewModel = settingsViewModel
+                    gameViewModel = gameViewModel,
+                    settingsViewModel = settingsViewModel,
+                    onSettingsClick = { navController.navigate(AppDestination.SETTINGS.name) },
+                    onContactClick = { navController.navigate(AppDestination.CONTACT.name) }
                 )
             }
             composable(AppDestination.HISTORY.name) {
                 HistoryDestination(
-                        viewModel = historyViewModel,
-                        onResumeClick = { gameId ->
-                            gameViewModel.loadGame(gameId)
-                            navController.navigate(AppDestination.GAME.name)
-                        },
-                        onViewClick = { gameId ->
-                            gameViewModel.loadGame(gameId)
-                            navController.navigate(AppDestination.GAME.name)
-                        }
+                    viewModel = historyViewModel,
+                    onResumeClick = { gameId ->
+                        gameViewModel.loadGame(gameId)
+                        navController.navigate(AppDestination.GAME.name)
+                    },
+                    onViewClick = { gameId ->
+                        gameViewModel.loadGame(gameId)
+                        navController.navigate(AppDestination.GAME.name)
+                    }
+                )
+            }
+            composable(AppDestination.SETTINGS.name) {
+                com.example.skyjotracker.ui.settings.SettingsScreen(
+                    onBackClick = { navController.popBackStack() },
+                    viewModel = settingsViewModel
+                )
+            }
+            composable(AppDestination.CONTACT.name) {
+                com.example.skyjotracker.ui.contact.ContactScreen(
+                    onBackClick = { navController.popBackStack() }
                 )
             }
             // composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
