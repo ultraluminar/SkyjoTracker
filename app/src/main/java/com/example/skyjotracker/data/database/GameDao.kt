@@ -7,7 +7,8 @@ import androidx.room.Query
 
 @Dao
 interface GameDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertGame(game: GameEntity): Long
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGame(game: GameEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlayer(player: PlayerEntity): Long
@@ -33,4 +34,7 @@ interface GameDao {
 
     @Query("UPDATE games SET isFinished = 1 WHERE gameId = :gameId")
     suspend fun setGameFinished(gameId: Long)
+
+    @Query("UPDATE games SET imageUri = :imageUri WHERE gameId = :gameId")
+    suspend fun updateGameImage(gameId: Long, imageUri: String?)
 }

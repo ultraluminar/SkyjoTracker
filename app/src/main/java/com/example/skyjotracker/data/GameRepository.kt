@@ -44,4 +44,8 @@ class GameRepository(private val gameDao: GameDao) {
     suspend fun getScores(gameId: Long): List<ScoreEntity> {
         return gameDao.getScoresForGame(gameId)
     }
+
+    suspend fun updateGameImage(gameId: Long, imageUri: String?) {
+        gameDao.updateGameImage(gameId, imageUri)
+    }
 }

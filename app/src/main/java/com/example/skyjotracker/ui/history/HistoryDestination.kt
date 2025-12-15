@@ -1,11 +1,14 @@
 package com.example.skyjotracker.ui.history
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,15 +35,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale.Companion
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.skyjotracker.R
 import com.example.skyjotracker.data.database.GameEntity
-import com.example.skyjotracker.ui.theme.SkyjoTrackerTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -50,7 +52,8 @@ import java.util.Locale
 fun HistoryDestination(
     viewModel: HistoryViewModel = viewModel(),
     onResumeClick: (Long) -> Unit,
-    onViewClick: (Long) -> Unit
+    onViewClick: (Long) -> Unit,
+    onImageClick: (GameEntity) -> Unit
 ) {
     val games by viewModel.games.collectAsState()
     val filterType by viewModel.filterType.collectAsState()
@@ -83,7 +86,12 @@ fun HistoryDestination(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(games, key = { it.gameId }) { game ->
-                    GameHistoryItem(game, onResumeClick, onViewClick)
+                    GameHistoryItem(
+                        game = game,
+                        onResumeClick = onResumeClick,
+                        onViewClick = onViewClick,
+                        onImageClick = { onImageClick(game) }
+                    )
                 }
             }
         }
@@ -159,7 +167,9 @@ fun HistoryScreenAppBar(
                             } else null
                     )
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.history_filter_in_progress)) },
+                        text = {
+                            Text(stringResource(R.string.history_filter_in_progress))
+                        },
                         onClick = {
                             onFilterSelected(HistoryFilterType.IN_PROGRESS)
                             showFilterMenu = false
@@ -229,42 +239,84 @@ fun HistoryScreenAppBar(
 }
 
 @Composable
-fun GameHistoryItem(game: GameEntity, onResumeClick: (Long) -> Unit, onViewClick: (Long) -> Unit) {
+fun GameHistoryItem(
+    game: GameEntity,
+    onResumeClick: (Long) -> Unit,
+    onViewClick: (Long) -> Unit,
+    onImageClick: () -> Unit
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        ) {
+            // Square image on the left
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
             ) {
-                Text(text = stringResource(R.string.history_game_number, game.gameId), style = MaterialTheme.typography.titleMedium)
-                Text(
-                    text = if (game.isFinished) stringResource(R.string.history_filter_finished) else stringResource(R.string.history_filter_in_progress),
-                    style = MaterialTheme.typography.labelMedium,
-                    color =
-                        if (game.isFinished) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.error
+                AsyncImage(
+                    model = "https://erasmus-adr.static.domains/skyjo.jpg",
+                    contentDescription =
+                        stringResource(R.string.history_game_number, game.gameId),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { onImageClick() },
+                    contentScale = Companion.Crop,
+                    placeholder = painterResource(R.drawable.placeholder_400x400)
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = formatDate(game.timestamp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                if (game.isFinished) {
-                    androidx.compose.material3.OutlinedButton(
-                        onClick = { onViewClick(game.gameId) }
-                    ) { Text(stringResource(R.string.history_view_results)) }
-                } else {
-                    androidx.compose.material3.Button(onClick = { onResumeClick(game.gameId) }) {
-                        Text(stringResource(R.string.history_resume))
+
+            // Content on the right
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.history_game_number, game.gameId),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text =
+                            if (game.isFinished)
+                                stringResource(R.string.history_filter_finished)
+                            else stringResource(R.string.history_filter_in_progress),
+                        style = MaterialTheme.typography.labelMedium,
+                        color =
+                            if (game.isFinished) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.error
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = formatDate(game.timestamp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(4.dp)
+                        .weight(1f)
+                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    if (game.isFinished) {
+                        androidx.compose.material3.OutlinedButton(
+                            onClick = { onViewClick(game.gameId) }
+                        ) { Text(stringResource(R.string.history_view_results)) }
+                    } else {
+                        androidx.compose.material3.Button(
+                            onClick = { onResumeClick(game.gameId) }
+                        ) { Text(stringResource(R.string.history_resume)) }
                     }
                 }
             }
@@ -278,40 +330,40 @@ private fun formatDate(timestamp: Long): String {
     return formatter.format(date)
 }
 
-@Preview
-@Composable
-fun GameHistoryItemPreviewFinished() {
-    SkyjoTrackerTheme(darkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.surface) {
-            GameHistoryItem(
-                game =
-                    GameEntity(
-                        gameId = 123,
-                        timestamp = System.currentTimeMillis(),
-                        isFinished = true
-                    ),
-                onResumeClick = {},
-                onViewClick = {}
-            )
-        }
-    }
-}
+// @Preview
+// @Composable
+// fun GameHistoryItemPreviewFinished() {
+//    SkyjoTrackerTheme(darkTheme = true) {
+//        Surface(color = MaterialTheme.colorScheme.surface) {
+//            GameHistoryItem(
+//                game =
+//                    GameEntity(
+//                        gameId = 123,
+//                        timestamp = System.currentTimeMillis(),
+//                        isFinished = true
+//                    ),
+//                onResumeClick = {},
+//                onViewClick = {}
+//            )
+//        }
+//    }
+// }
 
-@Preview
-@Composable
-fun GameHistoryItemPreviewInProgress() {
-    SkyjoTrackerTheme(darkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.surface) {
-            GameHistoryItem(
-                game =
-                    GameEntity(
-                        gameId = 456,
-                        timestamp = System.currentTimeMillis(),
-                        isFinished = false
-                    ),
-                onResumeClick = {},
-                onViewClick = {}
-            )
-        }
-    }
-}
+// @Preview
+// @Composable
+// fun GameHistoryItemPreviewInProgress() {
+//    SkyjoTrackerTheme(darkTheme = true) {
+//        Surface(color = MaterialTheme.colorScheme.surface) {
+//            GameHistoryItem(
+//                game =
+//                    GameEntity(
+//                        gameId = 456,
+//                        timestamp = System.currentTimeMillis(),
+//                        isFinished = false
+//                    ),
+//                onResumeClick = {},
+//                onViewClick = {}
+//            )
+//        }
+//    }
+// }

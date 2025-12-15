@@ -86,4 +86,10 @@
     <string name="history_game_number">Spiel #%d</string>
     <string name="history_view_results">Ergebnisse ansehen</string>
     <string name="history_resume">Fortsetzen</string>
+
+    <!-- Bildauswahl -->
+    <string name="image_picker_title">Bild hinzufügen</string>
+    <string name="image_picker_message">Wähle eine Option, um ein Bild zu diesem Spiel hinzuzufügen</string>
+    <string name="image_picker_camera">Foto aufnehmen</string>
+    <string name="image_picker_gallery">Aus Galerie wählen</string>
 </resources>

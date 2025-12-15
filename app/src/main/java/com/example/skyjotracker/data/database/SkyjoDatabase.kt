@@ -1,14 +1,16 @@
 package com.example.skyjotracker.data.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-        entities = [GameEntity::class, PlayerEntity::class, ScoreEntity::class],
-        version = 1,
-        exportSchema = false
+    entities = [GameEntity::class, PlayerEntity::class, ScoreEntity::class],
+    version = 2,
+    exportSchema = false
 )
 abstract class SkyjoDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao
@@ -17,11 +19,18 @@ abstract class SkyjoDatabase : RoomDatabase() {
         @Volatile
         private var Instance: SkyjoDatabase? = null
 
-        fun getDatabase(context: Context): SkyjoDatabase{
-            return Instance ?: synchronized(this){
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE games ADD COLUMN imageUri TEXT")
+            }
+        }
+
+        fun getDatabase(context: Context): SkyjoDatabase {
+            return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, SkyjoDatabase::class.java, "skyjo_database")
-                        .build()
-                        .also { Instance = it }
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
+                    .also { Instance = it }
             }
         }
     }

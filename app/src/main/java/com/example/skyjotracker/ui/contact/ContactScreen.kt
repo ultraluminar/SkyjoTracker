@@ -91,7 +91,7 @@ fun ContactScreen(onBackClick: () -> Unit) {
             Button(
                 onClick = {
                     sendEmail(context, name, email, message)
-                    onBackClick()
+                    // onBackClick()
                 },
                 enabled = message.isNotBlank() && email.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()

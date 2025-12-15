@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class HistoryViewModel(repository: GameRepository) : ViewModel() {
+class HistoryViewModel(private val repository: GameRepository) : ViewModel() {
 
     private val _filterType = MutableStateFlow(HistoryFilterType.ALL)
     val filterType: StateFlow<HistoryFilterType> = _filterType
@@ -47,6 +48,10 @@ class HistoryViewModel(repository: GameRepository) : ViewModel() {
 
     fun setSortType(type: HistorySortType) {
         _sortType.value = type
+    }
+
+    fun updateGameImage(gameId: Long, imageUri: String?) {
+        viewModelScope.launch { repository.updateGameImage(gameId, imageUri) }
     }
 
     class Factory(private val repository: GameRepository) : ViewModelProvider.Factory {

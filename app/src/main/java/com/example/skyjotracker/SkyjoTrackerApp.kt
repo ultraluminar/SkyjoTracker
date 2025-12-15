@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,6 +51,10 @@ fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
+
+    // Hoisted from HistoryDestination -> ImagePicker to be unconditional
+    var showImagePicker by remember { mutableStateOf(false) }
+    var selectedGameId by remember { mutableStateOf<Long?>(null) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -98,6 +105,11 @@ fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
                     onViewClick = { gameId ->
                         gameViewModel.loadGame(gameId)
                         navController.navigate(AppDestination.GAME.name)
+                    },
+                    // getting game from HistoryDestination
+                    onImageClick = { game ->
+                        selectedGameId = game.gameId
+                        showImagePicker = true
                     }
                 )
             }
@@ -115,6 +127,17 @@ fun SkyjoTrackerApp(settingsViewModel: SettingsViewModel) {
             // composable(AppDestination.STATISTICS.name) { StatisticsDestination() }
         }
     }
+
+//    ImagePickerDialog(
+//        show = showImagePicker,
+//        onImageSelected = { uri ->
+//            selectedGameId?.let { gameId -> historyViewModel.updateGameImage(gameId, uri.toString()) }
+//        },
+//        onDismiss = {
+//            showImagePicker = false
+//            selectedGameId = null
+//        }
+//    )
 }
 
 // @Composable

@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class GameEntity(
     @PrimaryKey(autoGenerate = true) val gameId: Long = 0,
     val timestamp: Long = System.currentTimeMillis(),
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val imageUri: String? = null
 )
